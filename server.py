@@ -10,12 +10,15 @@ def sent_analyzer():
     text_to_analyze = request.args.get('textToAnalyze')
     # Pass the text to the sentiment_analyzer function and store the response
     response = emotion_detector(text_to_analyze)
-    
-    # Generate output string
-    emotions = ", ".join([f"'{key}': {value}" for key, value in response.items() if key != "dominant_emotion"])
-    dominant_emotion = response["dominant_emotion"]
+    # Check if all values are None
+    if all(value is None for value in response.values()):
+        output = 'Invalid text! Please try again!.'
+    else:
+        # Generate output string
+        emotions = ", ".join([f"'{key}': {value}" for key, value in response.items() if key != "dominant_emotion"])
+        dominant_emotion = response["dominant_emotion"]
 
-    output = f"For the given statement, the system response is {emotions}. The dominant emotion is {dominant_emotion}."
+        output = f"For the given statement, the system response is {emotions}. The dominant emotion is {dominant_emotion}."
     return output
 
 @app.route("/")
